@@ -58,6 +58,48 @@
             border: 2px solid;
             /* Usará color dinámico en JS */
         }
+
+        /* Estilos para la sección desplegable del QR */
+        #qr-content-wrapper {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+
+        #qr-content-wrapper.active {
+            max-height: 500px; /* Suficiente para contener el QR */
+            opacity: 1;
+        }
+
+        /* Estilos para el contenedor del QR que imita el diseño con logo */
+        #qr-visual-container {
+            position: relative;
+            display: inline-block;
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            /* Usar CSS variables para el color del borde */
+            border: 4px solid var(--qr-border-color, #0ea5e9); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #qr-visual-container::before {
+            /* Usar CSS variables para el texto y el fondo del centro */
+            content: var(--qr-center-text, "DRK");
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: var(--qr-center-bg, #0c4a6e); 
+            padding: 8px 12px;
+            border-radius: 6px;
+            z-index: 10;
+            opacity: 0.9;
+        }
+
     </style>
     <!-- CDN para generar el código QR de instalación (qrcode.js) -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
@@ -105,15 +147,16 @@
                                 <svg class="w-4 h-4 ml-1 checkmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             </span>
                         </label>
-                        <!-- Selector 3: Mejor en el Mercado -->
+                        <!-- Selector 3: Mejor en el Mercado -> CAMBIADO A POWER CUP GLOBAL -->
                         <label class="mode-selector flex-1 px-2 py-2 rounded-lg cursor-pointer transition border-2 text-slate-600 bg-white hover:bg-drk-100" 
                                 id="mode-overall-best-label">
                             <input type="radio" name="comparison_mode" value="overall_best" id="mode-overall-best" class="hidden">
-                            <!-- NUEVA ESTRUCTURA PARA ICONO -->
-                            <span class="font-semibold flex items-center justify-between w-full">
-                                Mejor en el Mercado
-                                <svg class="w-4 h-4 ml-1 checkmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="visibility: hidden;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <!-- NUEVA ESTRUCTURA CON DOS LÍNEAS -->
+                            <span class="font-black flex flex-col items-center justify-center w-full leading-tight">
+                                <span class="text-base">POWER CUP</span>
+                                <span class="text-xs font-semibold -mt-0.5">Global</span>
                             </span>
+                            <svg class="w-4 h-4 ml-1 checkmark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="visibility: hidden;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         </label>
                     </div>
                 </div>
@@ -122,7 +165,7 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 mb-2">Analizar Factura</h2>
-                <p class="text-slate-500 mb-6">Escanea el código QR de la factura.</p>
+                <p class="text-slate-500 mb-6">Escanea el código QR de la CNMC.</p>
                 <button id="start-scan-btn" class="w-full bg-gradient-to-r from-drk-600 to-drk-800 hover:from-drk-700 hover:to-drk-900 text-white font-bold py-4 px-6 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-3 mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.125 3h3.75a2 2 0 011.664.89l.812 1.22a2 2 0 001.664.89H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <span>ESCANEAR QR AHORA</span>
@@ -136,14 +179,28 @@
 
                 <!-- START: PWA Installation QR Code Section -->
                 <div id="pwa-install-section" class="mt-8 pt-4 border-t border-slate-200">
-                    <p class="text-sm font-bold text-slate-600 mb-3">INSTALACIÓN EN EL MÓVIL (PWA)</p>
-                    <!-- Contenedor del QR code, con un ID para el script -->
-                    <div id="qr-code-container" class="w-40 h-40 mx-auto p-2 bg-white rounded-lg shadow-inner border border-slate-100">
-                        <!-- El código QR será generado aquí por JS -->
+                    <label class="flex items-center justify-center cursor-pointer mb-3 text-drk-800 hover:text-drk-900 transition">
+                        <input type="checkbox" id="qr-toggle-checkbox" class="h-4 w-4 text-drk-500 border-gray-300 rounded focus:ring-drk-500 mr-2">
+                        <!-- Título más pequeño: text-xs -->
+                        <span class="text-xs font-bold uppercase tracking-wider underline decoration-drk-500 decoration-2 underline-offset-4">Abrir en el Movil</span>
+                    </label>
+                    
+                    <!-- Contenedor desplegable -->
+                    <div id="qr-content-wrapper" class="opacity-0 max-h-0">
+                        
+                        <!-- Contenedor visual para el QR con logo (estilo de la imagen adjunta) -->
+                        <div id="qr-visual-container" class="mx-auto w-44 h-44 p-2" 
+                             style="--qr-border-color: #0ea5e9; --qr-center-bg: #0c4a6e; --qr-center-text: 'DRK';">
+                             <!-- Contenedor del QR code, con un ID para el script -->
+                            <div id="qr-code-container">
+                                <!-- El código QR será generado aquí por JS -->
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-slate-500 mt-3 px-4">
+                            Haz una foto del QR y ábrelo en tu móvil (iPhone/Android) para guardar el icono de **DRK - POWER** en la pantalla de inicio.
+                        </p>
                     </div>
-                    <p class="text-xs text-slate-500 mt-3 px-4">
-                        Haz una foto del QR y ábrelo en tu móvil (iPhone/Android) para guardar el icono de **DRK - POWER** en la pantalla de inicio.
-                    </p>
                 </div>
                 <!-- END: PWA Installation QR Code Section -->
             </div>
@@ -418,6 +475,9 @@
             
             // Nuevo elemento para el QR de instalación
             qrCodeContainer: document.getElementById('qr-code-container'),
+            qrToggleCheckbox: document.getElementById('qr-toggle-checkbox'),
+            qrContentWrapper: document.getElementById('qr-content-wrapper'),
+            qrVisualContainer: document.getElementById('qr-visual-container'),
         };
 
         // --- FUNCIÓN DE ACTUALIZACIÓN DE MARCA GLOBAL (DRK o POWER CUP) ---
@@ -478,6 +538,8 @@
                 h.classList.remove('text-drk-800', 'text-powercup-800');
                 h.classList.add(brand.PRIMARY_TEXT);
             });
+            
+            // Nota: generateInstallQR debe llamarse después de cambiar el comparisonMode si es necesario.
         }
         
         // Función para cambiar la marca activa y re-renderizar la UI inicial
@@ -1469,6 +1531,33 @@
                 currentBrandForInput = BRANDS.POWER_CUP;
             }
             applyBrandStyles(currentBrandForInput); 
+            
+            // 1. Aplicar estilos del botón de QR (Abrir en el Móvil)
+            const qrToggleLabel = els.qrToggleCheckbox.closest('label');
+            const toggleSpan = qrToggleLabel.querySelector('span');
+            const activePrefix = currentBrandForInput.NAME === 'DRK Energía' ? 'drk' : 'powercup'; // Usamos el prefijo para la limpieza
+
+            // Limpiar clases de marca anterior
+            qrToggleLabel.classList.forEach(cls => {
+                if (cls.startsWith('text-drk') || cls.startsWith('text-powercup') || cls.startsWith('hover:text-drk') || cls.startsWith('hover:text-powercup')) {
+                    qrToggleLabel.classList.remove(cls);
+                }
+            });
+            toggleSpan.classList.forEach(cls => {
+                if (cls.startsWith('decoration-drk') || cls.startsWith('decoration-powercup')) {
+                    toggleSpan.classList.remove(cls);
+                }
+            });
+            
+            // Aplicar clases de la marca activa (Text color y underline decoration)
+            qrToggleLabel.classList.add(currentBrandForInput.PRIMARY_TEXT, `hover:text-${activePrefix}-900`);
+            toggleSpan.classList.add(`decoration-${activePrefix}-500`);
+            
+            
+            // ** CRÍTICO: Actualizar el QR al cambiar de modo **
+            if (els.qrToggleCheckbox.checked) {
+                 generateInstallQR(newMode);
+            }
 
             // Obtener el prefijo de color de la marca ACTIVA (ya configurada por applyBrandStyles)
             // Ya que el branding solo cambia si es overall_best y es ganadora, forzamos el color del hover aquí.
@@ -1478,8 +1567,9 @@
             document.querySelectorAll('input[name="comparison_mode"]').forEach(input => {
                 const label = input.closest('label');
                 const checkmark = label.querySelector('.checkmark-icon'); // Buscar el nuevo icono
+                const spanText = label.querySelector('span'); // Span que contiene el texto del selector
                 
-                // 1. Limpieza de todos los estilos dinámicos de borde y hover
+                // 2. Limpieza de todos los estilos dinámicos de borde y hover
                 label.classList.remove('border-drk-500', 'bg-drk-500', 'hover:bg-drk-600', 'border-drk-300', 'hover:bg-drk-100');
                 label.classList.remove('border-powercup-500', 'bg-powercup-500', 'hover:bg-powercup-600', 'border-powercup-300', 'hover:bg-powercup-100');
                 
@@ -1491,7 +1581,7 @@
                 const prefix = isDrkMode ? drkPrefix : powerCupPrefix;
 
                 if (mode === newMode) {
-                    // 2. Estilo Seleccionado (Fondo de color fuerte de la marca específica)
+                    // 3. Estilo Seleccionado (Fondo de color fuerte, texto blanco)
                     label.classList.add(`border-${prefix}-500`, `bg-${prefix}-500`, 'text-white', `hover:bg-${prefix}-600`);
                     
                     // MOSTRAR ICONO SELECCIONADO
@@ -1500,12 +1590,17 @@
                         checkmark.classList.add('text-white'); 
                     }
                 } else {
-                    // 3. Estilo No Seleccionado
+                    // 4. Estilo No Seleccionado
                     
                     // Hover deseado: Azul suave (drk-100) para DRK, Verde suave (powercup-100) para Mejor Mercado
                     const hoverClass = `hover:bg-${prefix}-100`;
 
-                    label.classList.add(`border-${prefix}-300`, 'bg-white', 'text-slate-600', hoverClass);
+                    // Si el selector no activo corresponde a la marca ACTIVA global,
+                    // el texto DEBE ser el color primario de esa marca, no gris (text-slate-600).
+                    const textColor = (mode === 'overall_best' && newMode !== 'overall_best') ? 'text-powercup-800' : 
+                                      (mode !== 'overall_best' && newMode !== 'overall_best') ? 'text-drk-800' : 'text-slate-600';
+
+                    label.classList.add(`border-${prefix}-300`, 'bg-white', textColor, hoverClass);
                     
                     // OCULTAR ICONO NO SELECCIONADO
                     if (checkmark) {
@@ -1518,35 +1613,68 @@
         }
         
         // --- FUNCIÓN PARA GENERAR EL QR DE INSTALACIÓN ---
-        function generateInstallQR() {
-            // Usamos la URL externa proporcionada por el usuario para la instalación PWA
+        function generateInstallQR(mode = comparisonMode) {
             const url = EXTERNAL_APP_URL; 
             const size = 160; 
+            
+            // Colores por defecto (DRK)
+            let QR_DARK_COLOR = "#0c4a6e"; // DRK 900
+            let QR_LIGHT_COLOR = "#ffffff";
+            let QR_BORDER_COLOR = "#0ea5e9"; // DRK 500
+            let QR_CENTER_BG = "#0c4a6e";
+            let QR_CENTER_TEXT = 'DRK';
 
-            // Limpiar el contenedor antes de generar
+            // Si el modo es "Mejor en el Mercado", usamos el diseño de Power Cup (Verde/Oscuro)
+            if (mode === 'overall_best') {
+                 // Estilos Power Cup (Verde)
+                 QR_DARK_COLOR = "#3f6212"; // PowerCup 800 (Oscuro) para los módulos
+                 QR_BORDER_COLOR = "#84cc16"; // PowerCup 500 (Verde principal) para el borde
+                 QR_CENTER_BG = "#3f6212"; // PowerCup 800 (Fondo central)
+                 QR_CENTER_TEXT = 'CUP'; // Texto central: CUP
+            }
+
+            // Aplicar estilos dinámicos al contenedor visual
+            els.qrVisualContainer.style.setProperty('--qr-border-color', QR_BORDER_COLOR);
+            els.qrVisualContainer.style.setProperty('--qr-center-bg', QR_CENTER_BG);
+            els.qrVisualContainer.style.setProperty('--qr-center-text', `'${QR_CENTER_TEXT}'`);
+
+
+            // Limpiar el contenedor del QR antes de generar
             els.qrCodeContainer.innerHTML = '';
 
             if (typeof QRCode === 'undefined') {
-                // Si QRCode.js no cargó (aunque está en el CDN)
                 els.qrCodeContainer.innerHTML = '<p class="text-xs text-red-500">Error: QR library not loaded.</p>';
                 return;
             }
 
-            // Generar el código QR dentro del contenedor
+            // Generar el código QR
             new QRCode(els.qrCodeContainer, {
                 text: url,
                 width: size,
                 height: size,
-                colorDark : "#0c4a6e", // Usar DRK Dark como color principal
-                colorLight : "#ffffff",
+                colorDark : QR_DARK_COLOR,
+                colorLight : QR_LIGHT_COLOR,
                 correctLevel : QRCode.CorrectLevel.H
             });
             
-            // Re-centrar si es necesario (QRCode.js a veces deja un margen)
+            // Ajustar estilos del canvas generado
             const canvasElement = els.qrCodeContainer.querySelector('canvas');
             if (canvasElement) {
                 canvasElement.style.margin = '0 auto';
                 canvasElement.style.display = 'block';
+                canvasElement.style.padding = '10px'; 
+                canvasElement.style.backgroundColor = QR_LIGHT_COLOR; 
+            }
+        }
+        
+        // --- LÓGICA DE TOGGLE DEL QR ---
+        function toggleQRSection() {
+            if (els.qrToggleCheckbox.checked) {
+                // Si el QR está marcado para mostrar, regenerar con el modo actual
+                generateInstallQR(comparisonMode);
+                els.qrContentWrapper.classList.add('active');
+            } else {
+                els.qrContentWrapper.classList.remove('active');
             }
         }
 
@@ -1559,13 +1687,17 @@
             // 2. Establecer el branding inicial (DRK por defecto)
             applyBrandStyles(BRANDS.DRK);
             
-            // 3. Generar el código QR de instalación (ACTUALIZADO para usar la URL externa)
-            generateInstallQR();
+            // 3. Generar el código QR de instalación (usa el modo por defecto)
+            // Solo lo generamos si está abierto, pero lo preparamos con el modo inicial
+            generateInstallQR(comparisonMode);
 
             // 4. Listeners
             els.startScanBtn.addEventListener('click', startScanner);
             els.stopScanBtn.addEventListener('click', resetApp); // Cancelar escáner debe resetear la app
             els.capturePhotoBtn.addEventListener('click', capturePhoto);
+            
+            // Listener para el toggle del QR
+            els.qrToggleCheckbox.addEventListener('change', toggleQRSection);
             
             // Listener para mostrar el modal de OFERTA (Copiar HTML)
             els.sendOfferBtn.addEventListener('click', () => {

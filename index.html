@@ -347,6 +347,8 @@
         const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         const ANNUAL_DAYS = 365;
         const LOCAL_STORAGE_KEY = 'drk_loaded_tariffs';
+        // NUEVA URL EXTERNA PARA EL QR DE INSTALACIÓN (Fijo)
+        const EXTERNAL_APP_URL = 'https://faraujoteixeiradrk-creator.github.io/CALCULADORA-DRK-POWER-QR-CAMBIANDO-COLORES-DESCUENTO-y-DESCAR-TLF/';
 
         let currentTariffs = [];
         let lastComparisonResult = null;
@@ -1507,8 +1509,8 @@
         
         // --- FUNCIÓN PARA GENERAR EL QR DE INSTALACIÓN ---
         function generateInstallQR() {
-            // Genera el código QR con la URL actual para que el móvil lo reconozca
-            const url = window.location.href; 
+            // Usamos la URL externa proporcionada por el usuario para la instalación PWA
+            const url = EXTERNAL_APP_URL; 
             const size = 160; 
 
             // Limpiar el contenedor antes de generar
@@ -1547,7 +1549,7 @@
             // 2. Establecer el branding inicial (DRK por defecto)
             applyBrandStyles(BRANDS.DRK);
             
-            // 3. Generar el código QR de instalación (Nuevo requisito)
+            // 3. Generar el código QR de instalación (ACTUALIZADO para usar la URL externa)
             generateInstallQR();
 
             // 4. Listeners

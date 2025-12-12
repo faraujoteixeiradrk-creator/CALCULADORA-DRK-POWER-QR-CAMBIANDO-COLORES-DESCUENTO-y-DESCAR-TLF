@@ -1471,31 +1471,41 @@
             applyBrandStyles(currentBrandForInput); 
 
             // Obtener el prefijo de color de la marca ACTIVA (ya configurada por applyBrandStyles)
-            const basePrefix = activeBrand.NAME === 'DRK Energía' ? 'drk' : 'powercup'; 
+            // Ya que el branding solo cambia si es overall_best y es ganadora, forzamos el color del hover aquí.
+            const drkPrefix = 'drk';
+            const powerCupPrefix = 'powercup';
 
             document.querySelectorAll('input[name="comparison_mode"]').forEach(input => {
                 const label = input.closest('label');
                 const checkmark = label.querySelector('.checkmark-icon'); // Buscar el nuevo icono
                 
-                // 1. Limpieza de estilos dinámicos (DRK/POWER CUP) para todos
-                label.classList.remove('border-drk-500', 'bg-drk-500', 'hover:bg-drk-600', 'border-drk-300');
-                label.classList.remove('border-powercup-500', 'bg-powercup-500', 'hover:bg-powercup-600', 'border-powercup-300');
+                // 1. Limpieza de todos los estilos dinámicos de borde y hover
+                label.classList.remove('border-drk-500', 'bg-drk-500', 'hover:bg-drk-600', 'border-drk-300', 'hover:bg-drk-100');
+                label.classList.remove('border-powercup-500', 'bg-powercup-500', 'hover:bg-powercup-600', 'border-powercup-300', 'hover:bg-powercup-100');
+                
+                // Limpieza de texto de fondo para evitar conflictos
+                label.classList.remove('text-white', 'text-slate-600', 'bg-white');
 
-                if (input.value === newMode) {
-                    // 2. Estilo Seleccionado (usa el nuevo basePrefix)
-                    label.classList.add(`border-${basePrefix}-500`, `bg-${basePrefix}-500`, 'text-white', `hover:bg-${basePrefix}-600`);
-                    label.classList.remove('text-slate-600', 'bg-white', `hover:bg-${basePrefix}-100`);
+                const mode = input.value;
+                const isDrkMode = mode === 'drk_only' || mode === 'drk_prioritized';
+                const prefix = isDrkMode ? drkPrefix : powerCupPrefix;
 
+                if (mode === newMode) {
+                    // 2. Estilo Seleccionado (Fondo de color fuerte de la marca específica)
+                    label.classList.add(`border-${prefix}-500`, `bg-${prefix}-500`, 'text-white', `hover:bg-${prefix}-600`);
+                    
                     // MOSTRAR ICONO SELECCIONADO
                     if (checkmark) {
                         checkmark.style.visibility = 'visible';
-                        checkmark.classList.add('text-white'); // El checkmark es blanco sobre el fondo de color
-                        checkmark.classList.remove('text-slate-600');
+                        checkmark.classList.add('text-white'); 
                     }
                 } else {
-                    // 3. Estilo No Seleccionado (usa el nuevo basePrefix)
-                    label.classList.add(`border-${basePrefix}-300`, 'bg-white', 'text-slate-600', `hover:bg-${basePrefix}-100`);
-                    label.classList.remove(`border-${basePrefix}-500`, `bg-${basePrefix}-500`, 'text-white', `hover:bg-${basePrefix}-600`);
+                    // 3. Estilo No Seleccionado
+                    
+                    // Hover deseado: Azul suave (drk-100) para DRK, Verde suave (powercup-100) para Mejor Mercado
+                    const hoverClass = `hover:bg-${prefix}-100`;
+
+                    label.classList.add(`border-${prefix}-300`, 'bg-white', 'text-slate-600', hoverClass);
                     
                     // OCULTAR ICONO NO SELECCIONADO
                     if (checkmark) {

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -25,7 +24,7 @@
                             500: '#84cc16', // Verde principal
                             600: '#65a30d',
                             800: '#3f6212', // Verde oscuro
-                            900: '#365314',
+                            900: '#365314', // Verde muy oscuro
                             'yellow-flash': '#facc15', // Rayo amarillo
                         },
                         'cta-red': {
@@ -79,7 +78,7 @@
             background-color: white;
             border-radius: 1rem;
             padding: 1rem;
-            /* Usar CSS variables para el color del borde */
+            /* Usar CSS variables para el color del borde y centro */
             border: 4px solid var(--qr-border-color, #0ea5e9); 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
@@ -177,6 +176,13 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1m-4-5l-1-1m0 0l-1-1m0 0l-1-1M12 12v.01"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     <span>OPCIONES QR MANUAL</span>
                 </button>
+                
+                <!-- NUEVO BOTÓN: DATOS A MANO -->
+                <button id="manual-input-btn" class="w-full bg-drk-50 hover:bg-drk-100 text-drk-800 font-bold py-3 px-6 rounded-xl shadow-sm transform transition active:scale-95 flex items-center justify-center gap-3 mt-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span>DATOS A MANO</span>
+                </button>
+
                 <p id="loading-status" class="text-center text-sm text-slate-400 mt-4 hidden">Cargando tarifas...</p>
 
                 <!-- START: PWA Installation QR Code Section -->
@@ -192,7 +198,7 @@
                         
                         <!-- Contenedor visual para el QR con logo (estilo de la imagen adjunta) -->
                         <div id="qr-visual-container" class="mx-auto w-44 h-44 p-2" 
-                             style="--qr-border-color: #0ea5e9; --qr-center-bg: #0c4a6e; --qr-center-text: 'DRK';">
+                                style="--qr-border-color: #0ea5e9; --qr-center-bg: #0c4a6e; --qr-center-text: 'DRK';">
                                 <!-- Contenedor del QR code, con un ID para el script -->
                             <div id="qr-code-container">
                                 <!-- El código QR será generado aquí por JS -->
@@ -307,13 +313,65 @@
         </div>
         
         <!-- Modales -->
+        <!-- Modal Datos Manuales (NUEVO) -->
+        <div id="manual-input-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto">
+                <h3 class="text-xl font-bold text-drk-800 mb-4">Entrada de Datos Manual</h3>
+                
+                <!-- NUEVA SECCIÓN SUPERIOR: CUPS y DÍAS -->
+                <div class="border-b border-slate-200 pb-3 mb-4 bg-slate-50 p-3 rounded-lg">
+                    <h4 class="font-bold text-slate-800 mb-2">Datos de Factura y Punto</h4>
+                    <!-- CUPS -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">CUPS <span class="text-red-500">*</span></label>
+                    <input type="text" id="input-cups" placeholder="Número CUPS (Obligatorio)" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                    
+                    <!-- Días Facturados -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Días Facturados <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" id="input-billing-days" placeholder="Días del Periodo (Ej: 30)" class="w-full p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                </div>
+                
+                <div class="border-b border-slate-200 pb-3 mb-3">
+                    <h4 class="font-bold text-slate-800 mb-2">Potencia Contratada (kW)</h4>
+                    <!-- Potencia P1 -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">P1 Punta (kW) <span class="text-red-500">*</span></label>
+                    <input type="number" step="0.01" id="input-p1-kw" placeholder="Potencia P1 (kW) - Ej: 3.45" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                    
+                    <!-- Potencia P2 -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">P2 Valle (kW) <span class="text-red-500">*</span></label>
+                    <input type="number" step="0.01" id="input-p2-kw" placeholder="Potencia P2 (kW) - Ej: 4.60" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                </div>
+                
+                <div class="border-b border-slate-200 pb-3 mb-3">
+                    <h4 class="font-bold text-slate-800 mb-2">Consumo de Energía (kWh)</h4>
+                    <!-- Energía E1 -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E1 Punta (kWh) <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" id="input-e1-kwh" placeholder="Consumo Punta (kWh) - Ej: 150" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                    <!-- Energía E2 -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E2 Llano (kWh) <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" id="input-e2-kwh" placeholder="Consumo Llano (kWh) - Ej: 220" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                    <!-- Energía E3 -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E3 Valle (kWh) <span class="text-red-500">*</span></label>
+                    <input type="number" step="1" id="input-e3-kwh" placeholder="Consumo Valle (kWh) - Ej: 300" class="w-full mb-3 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                </div>
+
+                <div class="pb-3 mb-3">
+                    <!-- Total Factura (AHORA AL FINAL) -->
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Importe Total Factura (€) <span class="text-red-500">*</span></label>
+                    <input type="number" step="0.01" id="input-total-bill" placeholder="Importe Total (Ej: 95.50)" class="w-full mb-4 p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-drk-500 outline-none text-sm">
+                </div>
+                
+                <button id="execute-manual-input-btn" class="w-full bg-drk-500 hover:bg-drk-600 text-white font-bold py-3 rounded-xl shadow-md mb-3">CALCULAR COMPARATIVA</button>
+                <button onclick="document.getElementById('manual-input-modal').classList.add('hidden'); document.getElementById('manual-input-modal').classList.remove('flex');" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3 rounded-xl text-sm">Cancelar</button>
+            </div>
+        </div>
+
         <!-- Modal Opciones QR Manual -->
         <div id="qr-options-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 backdrop-blur-sm">
             <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-sm w-full">
                 <h3 class="text-xl font-bold text-drk-800 mb-4" id="modal-qr-title">Seleccione Opción</h3>
                 <button id="modal-upload-file-btn" class="w-full bg-drk-800 hover:bg-drk-900 text-white font-bold py-3 px-6 rounded-xl shadow-md mb-3">Subir Imagen</button>
                 <button id="modal-paste-image-btn" class="w-full bg-drk-600 hover:bg-drk-800 text-white font-bold py-3 px-6 rounded-xl shadow-md mb-4">Pegar Imagen (CTRL+V)</button>
-                <button onclick="document.getElementById('qr-options-modal').classList.add('hidden');" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3 rounded-xl">Cancelar</button>
+                <button onclick="document.getElementById('qr-options-modal').classList.add('hidden'); document.getElementById('qr-options-modal').classList.remove('flex');" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3 rounded-xl">Cancelar</button>
                 <textarea id="paste-catcher" class="opacity-0 w-0 h-0 absolute -z-10" aria-hidden="true"></textarea>
             </div>
         </div>
@@ -330,7 +388,7 @@
                 <!-- Botón de Copiar HTML (función original) -->
                 <button id="execute-send-offer-btn" class="w-full bg-cta-red-500 hover:bg-cta-red-600 text-white font-bold py-3 rounded-xl shadow-md mb-3">COPIAR COMPARATIVO (HTML)</button>
                 
-                <button onclick="document.getElementById('send-offer-modal').classList.add('hidden');" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3 rounded-xl text-sm">Cancelar</button>
+                <button onclick="document.getElementById('send-offer-modal').classList.add('hidden'); document.getElementById('send-offer-modal').classList.remove('flex');" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-3 rounded-xl text-sm">Cancelar</button>
             </div>
         </div>
 
@@ -422,7 +480,7 @@
         const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
         const ANNUAL_DAYS = 365;
         const LOCAL_STORAGE_KEY = 'drk_loaded_tariffs';
-        // NUEVA URL EXTERNA PARA EL QR DE INSTALACIÓN (Fijo)
+        // URL externa para el QR de instalación (Fijo)
         const EXTERNAL_APP_URL = 'https://faraujoteixeiradrk-creator.github.io/CALCULADORA-DRK-POWER-QR-CAMBIANDO-COLORES-DESCUENTO-y-DESCAR-TLF/';
 
         let currentTariffs = [];
@@ -490,6 +548,19 @@
             qrOptionsModal: document.getElementById('qr-options-modal'),
             modalPasteImageBtn: document.getElementById('modal-paste-image-btn'), 
             pasteCatcher: document.getElementById('paste-catcher'), 
+
+            // Elementos de Entrada Manual (NUEVOS)
+            manualInputBtn: document.getElementById('manual-input-btn'),
+            manualInputModal: document.getElementById('manual-input-modal'),
+            inputP1Kw: document.getElementById('input-p1-kw'),
+            inputP2Kw: document.getElementById('input-p2-kw'),
+            inputE1Kwh: document.getElementById('input-e1-kwh'),
+            inputE2Kwh: document.getElementById('input-e2-kwh'),
+            inputE3Kwh: document.getElementById('input-e3-kwh'),
+            inputTotalBill: document.getElementById('input-total-bill'),
+            inputBillingDays: document.getElementById('input-billing-days'),
+            inputCups: document.getElementById('input-cups'),
+            executeManualInputBtn: document.getElementById('execute-manual-input-btn'),
             
             // Nuevo elemento para el QR de instalación
             qrCodeContainer: document.getElementById('qr-code-container'),
@@ -532,8 +603,10 @@
             els.uploadMenuBtn.classList.remove('bg-drk-50', 'hover:bg-drk-100', 'text-drk-800', 'bg-powercup-50', 'hover:bg-powercup-100', 'text-powercup-800');
             els.uploadMenuBtn.classList.add(brand.SECONDARY_BG, `hover:bg-${basePrefix}-100`, brand.PRIMARY_TEXT);
             
-            // Comparison Mode Selectors (will be handled by updateComparisonMode)
-            
+            // Manual Input Button (NUEVO)
+            els.manualInputBtn.classList.remove('bg-drk-50', 'hover:bg-drk-100', 'text-drk-800', 'bg-powercup-50', 'hover:bg-powercup-100', 'text-powercup-800');
+            els.manualInputBtn.classList.add(brand.SECONDARY_BG, `hover:bg-${basePrefix}-100`, brand.PRIMARY_TEXT);
+
             // Scanner View Guide
             els.scannerGuide.classList.remove('border-drk-500', 'border-powercup-500');
             els.scannerGuide.classList.add(brand.BORDER);
@@ -551,28 +624,32 @@
             els.resetBtn.classList.add(`hover:${brand.BORDER}`, `hover:${brand.PRIMARY_TEXT}`);
 
             // Update modal headers (simplified to the new primary text class)
-            const modalTitles = document.querySelectorAll('#modal-qr-title, #modal-client-data-title');
+            const modalTitles = document.querySelectorAll('#modal-qr-title, #modal-client-data-title, #manual-input-modal h3');
             modalTitles.forEach(h => {
                 h.classList.remove('text-drk-800', 'text-powercup-800');
                 h.classList.add(brand.PRIMARY_TEXT);
             });
             
-            // Nota: generateInstallQR debe llamarse después de cambiar el comparisonMode si es necesario.
+            // Actualizar estilos del botón de Desglose
+            els.detailsToggleBtn.classList.remove('text-drk-800', 'text-powercup-800');
+            els.detailsToggleBtn.classList.add(brand.PRIMARY_TEXT);
         }
         
         // Función para cambiar la marca activa y re-renderizar la UI inicial
         function setActiveBrand(offer) {
             let targetBrand = BRANDS.DRK;
-            // Si el modo es 'overall_best' O si la mejor oferta no es DRK
-            if (comparisonMode === 'overall_best' || (lastComparisonResult && !offer.isDrk)) {
-                // Si la mejor oferta es DRK, mantenemos DRK. Si no, cambiamos a Power Cup.
-                if (offer.isDrk || lastComparisonResult.isNegativeSavings) {
+            
+            // El modo 'overall_best' O una oferta NO-DRK ganadora en cualquier modo (que no sea DRK only)
+            if (comparisonMode === 'overall_best' || (lastComparisonResult && !offer.isDrk && comparisonMode !== 'drk_only')) {
+                // Si la mejor oferta es DRK, Mantenemos DRK. Si no, cambiamos a Power Cup.
+                // También usamos DRK si no hay ahorro (isNegativeSavings), ya que el cliente se queda con su tarifa y el tema DRK es el tema base de la app.
+                if (offer.isDrk || (lastComparisonResult && lastComparisonResult.isNegativeSavings)) {
                     targetBrand = BRANDS.DRK; 
                 } else {
                     targetBrand = BRANDS.POWER_CUP;
                 }
             } else {
-                // Si el modo es 'drk_only' o 'drk_prioritized'
+                // Si el modo es 'drk_only' o 'drk_prioritized' y el ganador es DRK (o no hay mejor opcion), usamos DRK
                 targetBrand = BRANDS.DRK;
             }
             applyBrandStyles(targetBrand);
@@ -585,11 +662,13 @@
                 els.loadingStatus.classList.add('hidden');
                 els.startScanBtn.disabled = false;
                 els.uploadMenuBtn.disabled = false;
+                els.manualInputBtn.disabled = false; // Habilitar el botón manual también
             } else {
                 els.loadingStatus.textContent = "Error: No hay tarifas disponibles. Verifique permisos de Google Sheet.";
                 els.loadingStatus.classList.remove('hidden');
                 els.startScanBtn.disabled = true;
                 els.uploadMenuBtn.disabled = true;
+                els.manualInputBtn.disabled = true; // Deshabilitar el botón manual
             }
         }
         function loadTariffsFromStorage() { try { const stored = localStorage.getItem(LOCAL_STORAGE_KEY); if (stored) return JSON.parse(stored); } catch (e) { console.error("Storage Error", e); } return []; }
@@ -672,7 +751,7 @@
                     }
                 }
                 
-                // Determinar si la tarifa es DRK
+                // Determinar si la tarifa es DRK (caso insensible a mayúsculas)
                 tariff.isDrk = tariff.name ? tariff.name.toUpperCase().includes('DRK') : false;
 
                 if (isValidTariff && tariff.p1_price !== undefined) newTariffs.push(tariff);
@@ -729,7 +808,7 @@
 
         function dateDiffInDays(d1, d2) {
             const parse = (str) => {
-                if (!str || str.length !== 10) return null;
+                if (!str) return null;
                 // Formato DD/MM/YYYY (común en España) o YYYY-MM-DD
                 if (str.includes('/')) { const p = str.split('/'); return new Date(p[2], p[1]-1, p[0]); }
                 if (str.includes('-')) { const p = str.split('-'); return new Date(p[0], p[1]-1, p[2]); }
@@ -769,6 +848,46 @@
             compareOffers(data);
         }
         
+        // --- FUNCIÓN DE ENTRADA MANUAL (NUEVO) ---
+        function handleManualInput() {
+            // 1. Get values and sanitize/parse
+            const p1Kw = parseFloat(els.inputP1Kw.value.replace(',', '.')) || 0;
+            const p2Kw = parseFloat(els.inputP2Kw.value.replace(',', '.')) || 0;
+            const e1Kwh = parseFloat(els.inputE1Kwh.value.replace(',', '.')) || 0;
+            const e2Kwh = parseFloat(els.inputE2Kwh.value.replace(',', '.')) || 0;
+            const e3Kwh = parseFloat(els.inputE3Kwh.value.replace(',', '.')) || 0;
+            const totalBill = parseFloat(els.inputTotalBill.value.replace(',', '.')) || 0;
+            const billingDays = parseInt(els.inputBillingDays.value, 10) || 0;
+            const cups = els.inputCups.value.trim();
+
+            // 2. Validation (CUPS, Bill, Days, Potency, Energy)
+            if (!cups || cups.length < 10) return window.showErrorModal("El número CUPS es obligatorio y debe ser válido.");
+            if (totalBill <= 0) return window.showErrorModal("El Importe Total de Factura debe ser mayor que cero.");
+            if (billingDays <= 0) return window.showErrorModal("Los Días Facturados deben ser mayores que cero.");
+            if (p1Kw <= 0) return window.showErrorModal("La Potencia P1 debe ser mayor que cero.");
+            if (p2Kw <= 0) return window.showErrorModal("La Potencia P2 debe ser mayor que cero.");
+            if (e1Kwh + e2Kwh + e3Kwh <= 0) return window.showErrorModal("El Consumo de Energía total (E1+E2+E3) debe ser mayor que cero.");
+            
+            // 3. Create data object (compatible with compareOffers)
+            const manualData = {
+                cups: cups,
+                dias_facturados: billingDays,
+                consumo_punta: e1Kwh,
+                consumo_llano: e2Kwh,
+                consumo_valle: e3Kwh,
+                consumo_total: e1Kwh + e2Kwh + e3Kwh,
+                potencia_p1_kw: p1Kw,
+                potencia_p2_kw: p2Kw,
+                importe_total: totalBill,
+                fechas: `Manual (${billingDays} días)` 
+            };
+
+            // 4. Hide modal and start comparison
+            els.manualInputModal.classList.add('hidden');
+            els.manualInputModal.classList.remove('flex');
+            compareOffers(manualData);
+        }
+        
         // --- CÁLCULO DE COSTE PARA UNA TARIFA ÚNICA ---
         function calculateTariffCost(tariff, data) {
             const IVA_RATE = 0.21;
@@ -791,7 +910,8 @@
             
             // APLICAR DESCUENTO
             const discountRate = (tariff.descuento || 0) / 100; // Convertir 5 (número entero) a 0.05 (tasa)
-            const discountAmount = subEnergy * discountRate;
+            // El descuento se aplica ÚNICAMENTE a la ENERGÍA (subEnergy)
+            const discountAmount = subEnergy * discountRate; 
             const subEnergyWithDiscount = subEnergy - discountAmount;
 
             // Coste Base (Potencia + Energía Neta)
@@ -855,7 +975,7 @@
             
             // 2. Lógica basada en el comparisonMode
             if (comparisonMode === 'drk_only') {
-                // Modo 1: Solo DRK. Si hay, usamos la mejor DRK. Si no, usamos la mejor general.
+                // Modo 1: Solo DRK. 
                 finalComparisonResult = bestDrkComparison || bestOverallComparison;
             } else if (comparisonMode === 'drk_prioritized') {
                 // Modo 2: DRK Prioritario. Si la mejor DRK ahorra dinero, la usamos. Si no, mostramos la mejor opción ABSOLUTA.
@@ -877,20 +997,18 @@
             // 3. Manejo de Ahorro Negativo/Cero
             if (finalComparisonResult.savings <= 0) {
                 // Si la mejor opción calculada no ahorra o es negativa, asumimos que la tarifa del cliente es la mejor.
-                // Usamos la información del cliente pero marcamos el flag isNegativeSavings.
-                // En este caso, el ahorro será 0, y el 'Nuevo Coste' será igual al 'Coste Actual'.
                 lastComparisonResult = { 
                     ...finalComparisonResult, 
                     savings: 0,
                     totalAnnual: finalComparisonResult.originalBillAnnual, // El nuevo coste es el coste actual
-                    offer: { name: "Tarifa Actual", description: "La tarifa que el cliente ya tiene contratada", isDrk: true }, // Marcamos como DRK (o neutral) para que aplique el tema DRK/neutro
+                    offer: { name: "Tarifa Actual", description: "La tarifa que el cliente ya tiene contratada", isDrk: true }, // Forzamos isDrk: true para el branding DRK/base
                     isNegativeSavings: true 
                 };
             } else {
                 lastComparisonResult = { ...finalComparisonResult, isNegativeSavings: false };
             }
 
-            // 4. Aplicar la marca antes de renderizar los resultados (Este controlará el resultado final)
+            // 4. Aplicar la marca antes de renderizar los resultados (Esto controlará el tema visual)
             setActiveBrand(lastComparisonResult.offer);
 
             renderResultsUI(lastComparisonResult.offer, lastComparisonResult);
@@ -908,26 +1026,34 @@
 
             els.cupsValue.textContent = bd.cups;
             
-            // 1. Limpieza de estilos dinámicos (para re-renderizados)
+            // 1. Limpieza y re-aplicación de estilos base
             const oldCostElements = document.querySelectorAll('#results-view .grid-cols-2 > div:first-child p');
             oldCostElements.forEach(p => {
                 p.classList.remove('text-green-500', 'text-red-500', 'line-through', 'decoration-red-400/50', 'decoration-red-500/50', 'decoration-2', 'font-bold', 'text-red-400', 'text-red-500', 'text-xl', 'text-lg');
             });
-            // Re-aplicar estilos base
             document.getElementById('old-period-cost-display').classList.add('text-xl'); 
             document.getElementById('old-annual-cost-display').classList.add('text-lg');
 
             // 2. Aplicar estilos de marca a la tarjeta de resultados
             els.resultHeader.className = `bg-gradient-to-r ${brand.PRIMARY_BG_GRADIENT} p-6 text-white text-center relative overflow-hidden`;
-            els.bestOfferDesc.className = `text-${brand.ACCENT.replace('500', '100')} text-sm opacity-90`; // e.g. text-drk-100 or text-powercup-100
+            // Nota: Aquí usamos text-white para el texto de la descripción para asegurarnos de que sea visible contra el fondo oscuro del gradiente.
+            els.bestOfferDesc.className = `text-white text-sm opacity-90`; 
+            
+            // Actualizar etiqueta de coste nuevo
+            const newCostName = offer.isDrk ? 'DRK' : brand.NAME.toUpperCase();
+            els.newCostLabel.textContent = `TU NUEVO COSTE ${newCostName}`;
             els.newCostLabel.className = `${brand.PRIMARY_TEXT} text-xs font-semibold mb-2 uppercase`;
-            els.newMonthlyCostDisplay.className = `text-2xl font-black text-${brand.ACCENT.replace('500', '900')}`;
-            els.newAnnualCostDisplay.className = `text-2xl font-black text-${brand.ACCENT.replace('500', '900')}`;
+            
+            // Aplicar colores del texto del coste nuevo (usa el color más oscuro de la marca)
+            const brandDarkText = `text-${brand.ACCENT.replace('500', '900')}`;
+
+            els.newMonthlyCostDisplay.className = `text-2xl font-black ${brandDarkText}`;
+            els.newAnnualCostDisplay.className = `text-2xl font-black ${brandDarkText}`;
             els.monthlyLabel.className = `text-xs ${brand.PRIMARY_TEXT} font-medium`;
             
             // 3. Renderizado de Contenido
             if (bd.isNegativeSavings) {
-                // A. Escenario: No mejor opción/Ahorro 0.00
+                // A. Escenario: No mejor opción/Ahorro 0.00 (Temas DRK por defecto)
                 els.bestOfferName.textContent = "¡Estás en la Mejor Opción!";
                 els.bestOfferDesc.textContent = "Tu tarifa actual es la más competitiva del mercado. Seguiremos estudiando.";
                 
@@ -1062,6 +1188,7 @@
                 if (success) {
                     window.showMessageModal("✅ ¡Oferta copiada con éxito! Ahora puede pegar (Ctrl+V o Cmd+V) el diseño visual en su correo de escritorio.");
                     els.sendOfferModal.classList.add('hidden');
+                    els.sendOfferModal.classList.remove('flex');
                 } else {
                     // Fallback para dispositivos que no soportan copia HTML enriquecida
                     window.showErrorModal("No se pudo copiar el diseño visual. Intente desde un PC o utilice la opción de compartir si existe en su dispositivo.");
@@ -1099,7 +1226,7 @@
             const D_BRAND_NAME = brand.NAME;
 
             const RED_CTA = '#CC0000';
-            const BG_LIGHT = '#f0f9ff';
+            const BG_LIGHT = brand.SECONDARY_BG.replace('bg-', '#'); // #f0f9ff (DRK) or #f7fee7 (PC)
             const GREEN_SAVE = '#16a34a';
 
             // Capturar datos del modal o usar placeholders
@@ -1175,11 +1302,15 @@
             
             // --- PLANTILLA PARA AHORRO NEGATIVO (No hay mejor opción) ---
             if (bd.isNegativeSavings) {
-                // ... (La plantilla de No Ahorro no necesita el desglose de descuento)
+                // Si no hay ahorro, forzamos el branding DRK (base de la app)
+                const NO_SAVE_DARK = DRK_DARK;
+                const NO_SAVE_MED = DRK_MED;
+                const NO_SAVE_CTA = DRK_CTA;
+                
                 return `
                     <table cellpadding="0" cellspacing="0" style="${tableMain}">
                         <!-- HEADER (DRK Theme) -->
-                        <tr><td colspan="2" style="${headerCell}">
+                        <tr><td colspan="2" style="background-color: ${NO_SAVE_DARK}; color: white; padding: 15px; text-align: center; border-radius: 8px 8px 0 0;">
                             <h1 style="margin:0; font-size: 24px;">ESTUDIO DE AHORRO</h1>
                             <p style="margin:5px 0 0 0; font-size: 14px; opacity: 0.9;">COMPARATIVA PROFESIONAL - DRK ENERGÍA</p>
                         </td></tr>
@@ -1192,25 +1323,25 @@
                         </td></tr>
 
                         <!-- RESULTADO POSITIVO DE NO AHORRO -->
-                        <tr><td colspan="2" style="background-color: ${BG_LIGHT}; padding: 25px 20px; text-align: center; border-top: 2px solid ${DRK_MED}; border-bottom: 2px solid ${DRK_MED};">
-                            <div style="font-size: 60px; color: ${DRK_CTA}; margin-bottom: 10px;">
+                        <tr><td colspan="2" style="background-color: ${BG_LIGHT}; padding: 25px 20px; text-align: center; border-top: 2px solid ${NO_SAVE_MED}; border-bottom: 2px solid ${NO_SAVE_MED};">
+                            <div style="font-size: 60px; color: ${NO_SAVE_CTA}; margin-bottom: 10px;">
                                 <span style="display: inline-block;">&#9989;</span>
                             </div>
-                            <p style="margin: 0; color: ${DRK_DARK}; font-size: 22px; font-weight: bold;">¡Excelente Noticia!</p>
-                            <h2 style="margin: 5px 0 10px 0; color: ${DRK_DARK}; font-size: 18px; font-weight: normal;">TU TARIFA ACTUAL ES LA MÁS COMPETITIVA DEL MERCADO</h2>
+                            <p style="margin: 0; color: ${NO_SAVE_DARK}; font-size: 22px; font-weight: bold;">¡Excelente Noticia!</p>
+                            <h2 style="margin: 5px 0 10px 0; color: ${NO_SAVE_DARK}; font-size: 18px; font-weight: normal;">TU TARIFA ACTUAL ES LA MÁS COMPETITIVA DEL MERCADO</h2>
                             <p style="margin: 0; font-size: 14px; color: #555;">En este momento, no existe una oferta que mejore tu coste actual, lo que confirma que tienes una tarifa muy competitiva. Seguiremos estudiando.</p>
                         </td></tr>
 
                         <!-- ESTADO ACTUAL (Destacado) -->
                         <tr><td colspan="2" style="padding: 20px; text-align: center;">
-                            <p style="font-size: 14px; font-weight: bold; color: ${DRK_DARK}; margin-bottom: 5px;">COSTE ANUAL ESTIMADO (ACTUAL):</p>
+                            <p style="font-size: 14px; font-weight: bold; color: ${NO_SAVE_DARK}; margin-bottom: 5px;">COSTE ANUAL ESTIMADO (ACTUAL):</p>
                             <span style="font-size: 32px; font-weight: bold; color: ${GREEN_SAVE}; display: block;">${eur(bd.originalBillAnnual)}</span>
                             <p style="font-size: 12px; color: #888;">/ AÑO (basado en el consumo de ${bd.dias_facturados} días)</p>
                             <p style="margin-top: 15px; font-size: 14px; color: #555;">[Colaborador: ${commercialCode}] | Este resumen es una simulación basada en su última factura.</p>
                         </td></tr>
 
                         <!-- FOOTER -->
-                        <tr><td colspan="2" style="padding: 0; height: 10px;"><div style="background-color: ${DRK_MED}; height: 5px; margin-top: 10px; border-radius: 0 0 8px 8px;"></div></td></tr>
+                        <tr><td colspan="2" style="padding: 0; height: 10px;"><div style="background-color: ${NO_SAVE_MED}; height: 5px; margin-top: 10px; border-radius: 0 0 8px 8px;"></div></td></tr>
                     </table>
                 `;
             }
@@ -1218,7 +1349,7 @@
             // --- PLANTILLA ESTÁNDAR (Ahorro Positivo) ---
             
             // Si la ganadora no es DRK, ajustamos el nombre en la tabla de precios
-            const supplierName = offer.isDrk ? 'DRK ENERGÍA' : 'OTRA COMERCIALIZADORA';
+            const supplierName = offer.isDrk ? 'DRK ENERGÍA' : D_BRAND_NAME.toUpperCase();
 
             const discountRowsHtml = bd.discountAmount > 0 ? `
                 <tr><td style="${rowLabel} font-weight: bold; color: #CC0000;">DESCUENTO COMERCIAL (${num(bd.discountRate * 100, 0)}%)</td><td style="${rowValue} font-weight: bold; color: #CC0000; white-space: nowrap;">-${num(bd.discountAmount, 2)} €</td></tr>
@@ -1272,7 +1403,7 @@
                         <tr><td style="padding: 5px 8px; border-bottom: 1px solid #eee;">Energía E2 (€/kWh)</td><td style="padding: 5px 8px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold; white-space: nowrap;">${numPriceFormula(offer.p2_price)}</td></tr>
                         <tr><td style="padding: 5px 8px; border-bottom: 1px solid #eee;">Energía E3 (€/kWh)</td><td style="padding: 5px 8px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold; white-space: nowrap;">${numPriceFormula(offer.p3_price)}</td></tr>
                         ${discountSummaryRow}
-                        <tr style="background-color: ${BG_LIGHT}; font-weight: bold;"><td style="padding: 8px; color: ${D_PRIMARY_DARK};">AHORRO ANUAL</td><td style="padding: 8px; text-align: right; font-size: 14px; color: ${D_ACCENT_CTA}; white-space: nowrap;">${eur(bd.savings)}</td></tr>
+                        <tr style="background-color: ${BG_LIGHT}; font-weight: bold;"><td style="padding: 8px; color: ${D_PRIMARY_DARK};">AHORRO ANUAL</td><td style="padding: 8px; text-align: right; font-size: 14px; color: ${GREEN_SAVE}; white-space: nowrap;">${eur(bd.savings)}</td></tr>
                         <!-- ESPACIO SOLICITADO -->
                         <tr style="background-color: white; height: 10px;"><td colspan="2"></td></tr>
                     </table>
@@ -1286,7 +1417,7 @@
                     </div>
                     <div style="background-color: ${BG_LIGHT}; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
                         <p style="margin: 0; font-size: 14px; color: #555;">TU AHORRO ANUAL ESTIMADO ES:</p>
-                        <span style="font-size: 32px; font-weight: bold; color: ${D_ACCENT_CTA}; display: block; margin-top: 5px; white-space: nowrap;">${eur(bd.savings)}</span>
+                        <span style="font-size: 32px; font-weight: bold; color: ${GREEN_SAVE}; display: block; margin-top: 5px; white-space: nowrap;">${eur(bd.savings)}</span>
                     </div>
                 </td></tr>
             `;
@@ -1334,7 +1465,7 @@
                                     <div style="font-size: 11px; color: #666;">/ AÑO</div>
                                 </td>
                                 <td style="width: 50%; padding: 15px; background-color: ${BG_LIGHT}; border: 1px solid ${D_PRIMARY_MED}; text-align: center; vertical-align: top;">
-                                    <div style="font-size: 11px; font-weight: bold; color: ${D_PRIMARY_MED}; text-transform: uppercase;">TU NUEVO COSTE ${D_BRAND_NAME === 'DRK Energía' ? 'DRK' : 'MEJOR OFERTA'}</div>
+                                    <div style="font-size: 11px; font-weight: bold; color: ${D_PRIMARY_MED}; text-transform: uppercase;">TU NUEVO COSTE ${supplierName === 'DRK ENERGÍA' ? 'DRK' : supplierName}</div>
                                     <div style="font-size: 24px; font-weight: bold; color: ${D_PRIMARY_DARK}; margin: 5px 0; white-space: nowrap;">${eur(bd.totalAnnual)}</div>
                                     <div style="font-size: 11px; color: ${D_PRIMARY_MED};">/ AÑO</div>
                                     <div style="font-size: 13px; font-weight: bold; color: ${D_PRIMARY_DARK}; margin-top: 5px; white-space: nowrap;">${eur(bd.totalAnnual/12)} / MES</div>
@@ -1415,6 +1546,7 @@
             els.loadingStatus.classList.add('hidden');
             els.startScanBtn.disabled = false;
             els.uploadMenuBtn.disabled = false; 
+            els.manualInputBtn.disabled = false;
         };
         
         // --- LÓGICA DE ESCÁNER Y CÁMARA ---
@@ -1488,7 +1620,8 @@
                     if (items[i].type.indexOf('image') !== -1) {
                         const blob = items[i].getAsFile();
                         if (blob) {
-                            document.getElementById('qr-options-modal').classList.add('hidden');
+                            els.qrOptionsModal.classList.add('hidden');
+                            els.qrOptionsModal.classList.remove('flex');
                             e.preventDefault();
                             processImageForQR(blob);
                             break;
@@ -1574,25 +1707,23 @@
             
             // ** CRÍTICO: Actualizar el QR al cambiar de modo **
             if (els.qrToggleCheckbox.checked) {
-                 generateInstallQR(newMode);
+                toggleQRSection(); // Llama a toggleQRSection que dentro llama a generateInstallQR(newMode)
             }
 
             // Obtener el prefijo de color de la marca ACTIVA (ya configurada por applyBrandStyles)
-            // Ya que el branding solo cambia si es overall_best y es ganadora, forzamos el color del hover aquí.
             const drkPrefix = 'drk';
             const powerCupPrefix = 'powercup';
 
             document.querySelectorAll('input[name="comparison_mode"]').forEach(radio => {
                 const label = radio.closest('label');
                 const checkmark = label.querySelector('.checkmark-icon'); // Buscar el nuevo icono
-                const spanText = label.querySelector('span'); // Span que contiene el texto del selector
                 
                 // 2. Limpieza de todos los estilos dinámicos de borde y hover
                 label.classList.remove('border-drk-500', 'bg-drk-500', 'hover:bg-drk-600', 'border-drk-300', 'hover:bg-drk-100');
                 label.classList.remove('border-powercup-500', 'bg-powercup-500', 'hover:bg-powercup-600', 'border-powercup-300', 'hover:bg-powercup-100');
                 
                 // Limpieza de texto de fondo para evitar conflictos
-                label.classList.remove('text-white', 'text-slate-600', 'bg-white');
+                label.classList.remove('text-white', 'text-slate-600', 'bg-white', 'text-drk-800', 'text-powercup-800');
 
                 const mode = radio.value;
                 const isDrkMode = mode === 'drk_only' || mode === 'drk_prioritized';
@@ -1605,20 +1736,19 @@
                     // MOSTRAR ICONO SELECCIONADO
                     if (checkmark) {
                         checkmark.style.visibility = 'visible';
+                        checkmark.classList.remove('text-slate-600');
                         checkmark.classList.add('text-white'); 
                     }
                 } else {
                     // 4. Estilo No Seleccionado
                     
-                    // Hover deseado: Azul suave (drk-100) para DRK, Verde suave (powercup-100) para Mejor Mercado
+                    // Definir el color del texto para el estado no seleccionado (gris o color de la marca)
+                    const inactiveTextColor = (mode === 'overall_best') ? 'text-powercup-800' : 'text-drk-800';
+
+                    // Definir el color del hover (fondo 100)
                     const hoverClass = `hover:bg-${prefix}-100`;
 
-                    // Si el selector no activo corresponde a la marca ACTIVA global,
-                    // el texto DEBE ser el color primario de esa marca, no gris (text-slate-600).
-                    const textColor = (mode === 'overall_best' && newMode !== 'overall_best') ? 'text-powercup-800' : 
-                                             (mode !== 'overall_best' && newMode !== 'overall_best') ? 'text-drk-800' : 'text-slate-600';
-
-                    label.classList.add(`border-${prefix}-300`, 'bg-white', textColor, hoverClass);
+                    label.classList.add(`border-${prefix}-300`, 'bg-white', inactiveTextColor, hoverClass);
                     
                     // OCULTAR ICONO NO SELECCIONADO
                     if (checkmark) {
@@ -1651,7 +1781,7 @@
                 QR_CENTER_TEXT = 'CUP'; // Texto central: CUP
             }
 
-            // Aplicar estilos dinámicos al contenedor visual
+            // Aplicar estilos dinámicos al contenedor visual (variables CSS)
             els.qrVisualContainer.style.setProperty('--qr-border-color', QR_BORDER_COLOR);
             els.qrVisualContainer.style.setProperty('--qr-center-bg', QR_CENTER_BG);
             els.qrVisualContainer.style.setProperty('--qr-center-text', `'${QR_CENTER_TEXT}'`);
@@ -1703,7 +1833,6 @@
             fetchTariffsFromSheet();
 
             // 2. Establecer el branding inicial (DRK por defecto)
-            // Esto llamará a applyBrandStyles y cargará el logo DRK por defecto.
             applyBrandStyles(BRANDS.DRK);
             
             // 3. Generar el código QR de instalación (usa el modo por defecto)
@@ -1722,11 +1851,7 @@
                 if (lastComparisonResult) {
                     els.sendOfferModal.classList.remove('hidden');
                     els.sendOfferModal.classList.add('flex');
-                    // Resetear el estilo de los modales por si ha cambiado el tema.
-                    document.getElementById('modal-client-data-title').classList.remove('text-drk-800', 'text-powercup-800');
-                    document.getElementById('modal-client-data-title').classList.add(activeBrand.PRIMARY_TEXT);
-                    document.getElementById('comercial-code-input').classList.remove('focus:ring-drk-500', 'focus:ring-powercup-500');
-                    document.getElementById('comercial-code-input').classList.add(`focus:ring-${activeBrand.ACCENT}`);
+                    
                     // aplicar estilo a todos los inputs
                     document.querySelectorAll('#send-offer-modal input').forEach(input => {
                         input.classList.remove('focus:ring-drk-500', 'focus:ring-powercup-500');
@@ -1741,19 +1866,24 @@
             els.executeSendOfferBtn.addEventListener('click', handleCopyOffer);
 
 
-            // Listeners para el menú de opciones QR manual
+            // Listeners para el menú de opciones QR manual (Subir/Pegar)
             els.uploadMenuBtn.addEventListener('click', () => {
                 els.qrOptionsModal.classList.remove('hidden');
+                els.qrOptionsModal.classList.add('flex');
+                
                 // aplicar estilos de marca a los botones del modal QR
-                document.getElementById('modal-upload-file-btn').classList.remove('bg-drk-800', 'hover:bg-drk-900', 'bg-powercup-800', 'hover:bg-powercup-900');
-                document.getElementById('modal-upload-file-btn').classList.add(`bg-${activeBrand.ACCENT.replace('500', '800')}`, `hover:bg-${activeBrand.ACCENT.replace('500', '900')}`);
-                document.getElementById('modal-paste-image-btn').classList.remove('bg-drk-600', 'hover:bg-drk-800', 'bg-powercup-600', 'hover:bg-powercup-800');
-                document.getElementById('modal-paste-image-btn').classList.add(`bg-${activeBrand.ACCENT.replace('500', '600')}`, `hover:bg-${activeBrand.ACCENT.replace('500', '800')}`);
+                const basePrefix = activeBrand.NAME === 'DRK Energía' ? 'drk' : 'powercup';
+
+                // Botón Subir Imagen (Dark)
+                document.getElementById('modal-upload-file-btn').className = `w-full bg-${basePrefix}-800 hover:bg-${basePrefix}-900 text-white font-bold py-3 px-6 rounded-xl shadow-md mb-3`;
+                // Botón Pegar Imagen (Medium)
+                document.getElementById('modal-paste-image-btn').className = `w-full bg-${basePrefix}-600 hover:bg-${basePrefix}-800 text-white font-bold py-3 px-6 rounded-xl shadow-md mb-4`;
             });
             document.getElementById('modal-upload-file-btn').addEventListener('click', () => document.getElementById('image-file-input').click()); 
             
             document.getElementById('image-file-input').addEventListener('change', (e) => {
                 els.qrOptionsModal.classList.add('hidden');
+                els.qrOptionsModal.classList.remove('flex');
                 if (e.target.files[0]) processImageForQR(e.target.files[0]);
                 // Limpiar input después de usar
                 e.target.value = ''; 
@@ -1761,6 +1891,23 @@
             
             // Configurar el "pegado" de imagen
             setupPasteCatcher();
+
+            // Listeners para la Entrada Manual (NUEVO)
+            els.manualInputBtn.addEventListener('click', () => {
+                els.manualInputModal.classList.remove('hidden');
+                els.manualInputModal.classList.add('flex');
+                
+                // Aplicar estilos de marca a los inputs y botones del modal manual
+                document.querySelectorAll('#manual-input-modal input').forEach(input => {
+                    // 1. Limpiamos cualquier anillo de enfoque anterior
+                    input.classList.remove('focus:ring-drk-500', 'focus:ring-powercup-500');
+                    // 2. Aplicamos el anillo de enfoque de la marca activa (ya sea drk-500 o powercup-500)
+                    input.classList.add(`focus:ring-${activeBrand.ACCENT}`);
+                });
+                els.executeManualInputBtn.classList.remove('bg-drk-500', 'hover:bg-drk-600', 'bg-powercup-500', 'hover:bg-powercup-600');
+                els.executeManualInputBtn.classList.add(`bg-${activeBrand.ACCENT}`, `hover:bg-${activeBrand.ACCENT.replace('500', '600')}`);
+            });
+            els.executeManualInputBtn.addEventListener('click', handleManualInput);
             
             // 5. Listeners for Comparison Mode
             document.querySelectorAll('input[name="comparison_mode"]').forEach(radio => {

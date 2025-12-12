@@ -161,7 +161,9 @@
                     </div>
                 </div>
                 <!-- END: NEW COMPARISON MODE SELECTORS -->
+                <!-- El logo se inyecta aquí por JS -->
                 <div id="initial-icon-bg" class="w-16 h-16 bg-drk-50 rounded-full flex items-center justify-center mx-auto mb-4 text-drk-600">
+                    <!-- Contenido inicial que será reemplazado en initApp por el logo DRK -->
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 mb-2">Analizar Factura</h2>
@@ -191,7 +193,7 @@
                         <!-- Contenedor visual para el QR con logo (estilo de la imagen adjunta) -->
                         <div id="qr-visual-container" class="mx-auto w-44 h-44 p-2" 
                              style="--qr-border-color: #0ea5e9; --qr-center-bg: #0c4a6e; --qr-center-text: 'DRK';">
-                             <!-- Contenedor del QR code, con un ID para el script -->
+                                <!-- Contenedor del QR code, con un ID para el script -->
                             <div id="qr-code-container">
                                 <!-- El código QR será generado aquí por JS -->
                             </div>
@@ -357,7 +359,23 @@
                 SECONDARY_BG: 'bg-drk-50',
                 SECONDARY_TEXT: 'text-drk-600',
                 BORDER: 'border-drk-500',
-                LOGO_SVG: '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>',
+                // SVG del logo DRK (anillos de colores) - AJUSTADO PARA MAYOR FIDELIDAD
+                LOGO_SVG: `
+                    <svg class="w-8 h-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <style>
+                            /* Usamos colores sólidos y ajustamos la posición para superposición */
+                            .drk-ring{fill:none;stroke-width:10;stroke-linecap:round;}
+                        </style>
+                        <!-- Anillo Rojo (Top-Left) -->
+                        <circle class="drk-ring" cx="45" cy="45" r="35" stroke="#E50000"/>
+                        <!-- Anillo Amarillo (Bottom-Right) -->
+                        <circle class="drk-ring" cx="55" cy="55" r="35" stroke="#FFCC00"/>
+                        <!-- Anillo Azul (Bottom-Left) -->
+                        <circle class="drk-ring" cx="45" cy="55" r="35" stroke="#0079C1"/>
+                        <!-- Anillo Verde (Top-Right) -->
+                        <circle class="drk-ring" cx="55" cy="45" r="35" stroke="#00A859"/>
+                    </svg>
+                `,
                 NAV_BG: 'bg-drk-900',
                 NAV_SUBTITLE_BG: 'bg-drk-800',
                 NAV_SUBTITLE_TEXT: 'text-drk-100'
@@ -371,7 +389,7 @@
                 SECONDARY_BG: 'bg-powercup-50',
                 SECONDARY_TEXT: 'text-powercup-600',
                 BORDER: 'border-powercup-500',
-                // SVG del logo PowerCup
+                // SVG del logo PowerCup (Taza/Batería)
                 LOGO_SVG: `
                     <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Taza y Sombra -->
@@ -505,7 +523,7 @@
             // Icon BG
             els.initialIconBg.classList.remove('bg-drk-50', 'text-drk-600', 'bg-powercup-50', 'text-powercup-600');
             els.initialIconBg.classList.add(brand.SECONDARY_BG, brand.SECONDARY_TEXT);
-            els.initialIconBg.innerHTML = brand.LOGO_SVG;
+            els.initialIconBg.innerHTML = brand.LOGO_SVG; // <--- **AQUÍ SE INYECTA EL LOGO DRK/POWER CUP**
 
             // Start Scan Button
             els.startScanBtn.className = `w-full bg-gradient-to-r ${brand.PRIMARY_BUTTON} text-white font-bold py-4 px-6 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-3 mb-3`;
@@ -700,9 +718,9 @@
             if (!successful) {
                 currentTariffs = loadTariffsFromStorage();
                 if (currentTariffs.length === 0) {
-                     window.showErrorModal("Error crítico: No se pudieron cargar tarifas desde el servidor. Verifique que la hoja de cálculo esté configurada como **pública (Cualquier persona con el enlace puede ver)**.");
+                    window.showErrorModal("Error crítico: No se pudieron cargar tarifas desde el servidor. Verifique que la hoja de cálculo esté configurada como **pública (Cualquier persona con el enlace puede ver)**.");
                 } else {
-                     els.loadingStatus.textContent = `Error de red. Usando ${currentTariffs.length} tarifas de la caché.`;
+                    els.loadingStatus.textContent = `Error de red. Usando ${currentTariffs.length} tarifas de la caché.`;
                 }
             }
             
@@ -1115,39 +1133,39 @@
 
             // Cuerpo del email se ajusta a la marca ganadora
             const emailBody = `Hola ${D_BRAND_NAME.toUpperCase()}, confirmo la aceptación de la oferta con CUPS: ${bd.cups}.${LB}${LB}` +
-                                `--- DATOS DE LA OFERTA ---${LB}${LB}` +
-                                `Comercializadora y Tarifa: ${D_BRAND_NAME.toUpperCase()} - ${offer.name}${LB}` +
-                                `Zona Geográfica: PENINSULA${LB}` +
-                                `Ahorro Anual Estimado: ${eur(bd.savings)}${LB}` +
-                                `Total Mensual Estimado: ${monthlyEstimate}${LB}` +
-                                `Consumo Total Facturado: ${totalConsumption}${LB}` +
-                                `${discountLine}` + // AGREGAR DESCUENTO
-                                `--- DETALLE DE PRECIOS (€) ---${LB}` +
-                                `P1 (Potencia - €/kW/día): ${p1PricePerDay}${LB}` +
-                                `P2 (Potencia - €/kW/día): ${p2PricePerDay}${LB}` +
-                                `E1 (Energía - €/kWh): ${e1Price}${LB}` +
-                                `E2 (Energía - €/kWh): ${e2Price}${LB}` +
-                                `E3 (Energía - €/kWh): ${e3Price}${LB}` +
-                                `------------------------------${LB}${LB}` +
-                                `Por favor, utilicen los siguientes datos para tramitar mi cambio:${LB}` +
-                                `--------------------------------------------------------${LB}` +
-                                `DATOS DEL CLIENTE (A RELLENAR):${LB}` +
-                                `--------------------------------------------------------${LB}` +
-                                `Nombre completo: ${clientName}${LB}` +
-                                `Teléfono de contacto: ${clientPhone}${LB}` +
-                                `Email de contacto: ${clientEmail}${LB}${LB}` +
-                                `--------------------------------------------------------${LB}` +
-                                `INFORMACIÓN ADICIONAL (Opcional):${LB}` +
-                                `--------------------------------------------------------${LB}` +
-                                `[AGREGUE CUALQUIER COMENTARIO EXTRA AQUÍ]${LB}${LB}` +
-                                `--- DOCUMENTACIÓN REQUERIDA ---${LB}` +
-                                `Para formalizar el contrato, por favor, responde a este email adjuntando:${LB}` +
-                                `1. Foto del DNI/CIF (anverso y reverso).${LB}` +
-                                `2. Última factura (mínimo 3 meses de antigüedad).${LB}` +
-                                `3. Email de contacto para validación.${LB}` +
-                                `4. Teléfono de contacto.${LB}` +
-                                `5. Número de cuenta bancaria (IBAN).${LB}${LB}` +
-                                `Adjunto la documentación requerida.`;
+                                 `--- DATOS DE LA OFERTA ---${LB}${LB}` +
+                                 `Comercializadora y Tarifa: ${D_BRAND_NAME.toUpperCase()} - ${offer.name}${LB}` +
+                                 `Zona Geográfica: PENINSULA${LB}` +
+                                 `Ahorro Anual Estimado: ${eur(bd.savings)}${LB}` +
+                                 `Total Mensual Estimado: ${monthlyEstimate}${LB}` +
+                                 `Consumo Total Facturado: ${totalConsumption}${LB}` +
+                                 `${discountLine}` + // AGREGAR DESCUENTO
+                                 `--- DETALLE DE PRECIOS (€) ---${LB}` +
+                                 `P1 (Potencia - €/kW/día): ${p1PricePerDay}${LB}` +
+                                 `P2 (Potencia - €/kW/día): ${p2PricePerDay}${LB}` +
+                                 `E1 (Energía - €/kWh): ${e1Price}${LB}` +
+                                 `E2 (Energía - €/kWh): ${e2Price}${LB}` +
+                                 `E3 (Energía - €/kWh): ${e3Price}${LB}` +
+                                 `------------------------------${LB}${LB}` +
+                                 `Por favor, utilicen los siguientes datos para tramitar mi cambio:${LB}` +
+                                 `--------------------------------------------------------${LB}` +
+                                 `DATOS DEL CLIENTE (A RELLENAR):${LB}` +
+                                 `--------------------------------------------------------${LB}` +
+                                 `Nombre completo: ${clientName}${LB}` +
+                                 `Teléfono de contacto: ${clientPhone}${LB}` +
+                                 `Email de contacto: ${clientEmail}${LB}${LB}` +
+                                 `--------------------------------------------------------${LB}` +
+                                 `INFORMACIÓN ADICIONAL (Opcional):${LB}` +
+                                 `--------------------------------------------------------${LB}` +
+                                 `[AGREGUE CUALQUIER COMENTARIO EXTRA AQUÍ]${LB}${LB}` +
+                                 `--- DOCUMENTACIÓN REQUERIDA ---${LB}` +
+                                 `Para formalizar el contrato, por favor, responde a este email adjuntando:${LB}` +
+                                 `1. Foto del DNI/CIF (anverso y reverso).${LB}` +
+                                 `2. Última factura (mínimo 3 meses de antigüedad).${LB}` +
+                                 `3. Email de contacto para validación.${LB}` +
+                                 `4. Teléfono de contacto.${LB}` +
+                                 `5. Número de cuenta bancaria (IBAN).${LB}${LB}` +
+                                 `Adjunto la documentación requerida.`;
 
 
             const subject = `FORMALIZACIÓN DE CONTRATO - CUPS: ${bd.cups}`; 
@@ -1564,8 +1582,8 @@
             const drkPrefix = 'drk';
             const powerCupPrefix = 'powercup';
 
-            document.querySelectorAll('input[name="comparison_mode"]').forEach(input => {
-                const label = input.closest('label');
+            document.querySelectorAll('input[name="comparison_mode"]').forEach(radio => {
+                const label = radio.closest('label');
                 const checkmark = label.querySelector('.checkmark-icon'); // Buscar el nuevo icono
                 const spanText = label.querySelector('span'); // Span que contiene el texto del selector
                 
@@ -1576,7 +1594,7 @@
                 // Limpieza de texto de fondo para evitar conflictos
                 label.classList.remove('text-white', 'text-slate-600', 'bg-white');
 
-                const mode = input.value;
+                const mode = radio.value;
                 const isDrkMode = mode === 'drk_only' || mode === 'drk_prioritized';
                 const prefix = isDrkMode ? drkPrefix : powerCupPrefix;
 
@@ -1598,7 +1616,7 @@
                     // Si el selector no activo corresponde a la marca ACTIVA global,
                     // el texto DEBE ser el color primario de esa marca, no gris (text-slate-600).
                     const textColor = (mode === 'overall_best' && newMode !== 'overall_best') ? 'text-powercup-800' : 
-                                      (mode !== 'overall_best' && newMode !== 'overall_best') ? 'text-drk-800' : 'text-slate-600';
+                                             (mode !== 'overall_best' && newMode !== 'overall_best') ? 'text-drk-800' : 'text-slate-600';
 
                     label.classList.add(`border-${prefix}-300`, 'bg-white', textColor, hoverClass);
                     
@@ -1626,11 +1644,11 @@
 
             // Si el modo es "Mejor en el Mercado", usamos el diseño de Power Cup (Verde/Oscuro)
             if (mode === 'overall_best') {
-                 // Estilos Power Cup (Verde)
-                 QR_DARK_COLOR = "#3f6212"; // PowerCup 800 (Oscuro) para los módulos
-                 QR_BORDER_COLOR = "#84cc16"; // PowerCup 500 (Verde principal) para el borde
-                 QR_CENTER_BG = "#3f6212"; // PowerCup 800 (Fondo central)
-                 QR_CENTER_TEXT = 'CUP'; // Texto central: CUP
+                // Estilos Power Cup (Verde)
+                QR_DARK_COLOR = "#3f6212"; // PowerCup 800 (Oscuro) para los módulos
+                QR_BORDER_COLOR = "#84cc16"; // PowerCup 500 (Verde principal) para el borde
+                QR_CENTER_BG = "#3f6212"; // PowerCup 800 (Fondo central)
+                QR_CENTER_TEXT = 'CUP'; // Texto central: CUP
             }
 
             // Aplicar estilos dinámicos al contenedor visual
@@ -1685,10 +1703,10 @@
             fetchTariffsFromSheet();
 
             // 2. Establecer el branding inicial (DRK por defecto)
+            // Esto llamará a applyBrandStyles y cargará el logo DRK por defecto.
             applyBrandStyles(BRANDS.DRK);
             
             // 3. Generar el código QR de instalación (usa el modo por defecto)
-            // Solo lo generamos si está abierto, pero lo preparamos con el modo inicial
             generateInstallQR(comparisonMode);
 
             // 4. Listeners
